@@ -26,11 +26,11 @@ variable "ssh_username" {
   default = "ec2-user"
 }
 
-# ✅ Source block: instance_type and ssh_username go here
+# Source block: defines AMI filter and instance settings
 source "amazon-ebs" "amazon-linux" {
   ami_name      = "golden-ami-${local.timestamp}"
-  instance_type = var.instance_type
   region        = var.aws_region
+  instance_type = var.instance_type
   ssh_username  = var.ssh_username
 
   source_ami_filter {
@@ -39,12 +39,12 @@ source "amazon-ebs" "amazon-linux" {
       root-device-type    = "ebs"
       virtualization-type = "hvm"
     }
-    owners      = ["137112412989"] # Amazon official account
+    owners      = ["137112412989"]
     most_recent = true
   }
 }
 
-# Build block: only provisioners/post-processors
+# Build block: only provisioners and post-processors
 build {
   sources = ["source.amazon-ebs.amazon-linux"]
 
